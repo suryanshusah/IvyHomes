@@ -22,9 +22,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await apiLogin(email, password);
       
-      const { access_token, user: userData } = data;
+      const { access_token, refresh_token, user: userData } = data;
       
       localStorage.setItem('ivy_token', access_token);
+      if (refresh_token) {
+        localStorage.setItem('ivy_refresh_token', refresh_token);
+      }
       localStorage.setItem('ivy_user', JSON.stringify(userData));
       
       setToken(access_token);
@@ -42,6 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('ivy_token');
+    localStorage.removeItem('ivy_refresh_token');
     localStorage.removeItem('ivy_user');
     setToken(null);
     setUser(null);
